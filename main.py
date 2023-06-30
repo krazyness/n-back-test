@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 import random
 import time
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 from PySide6.QtCore import QTimer
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -44,9 +46,9 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.update)
 
     def on_click(self):
-        if self.countdown_time > 1: # Initial Click
+        if self.countdown_time > 1:  # Initial Click
             print("letter didn't appear, start timer")
-            
+
             self.center_button.setEnabled(False)
             self.correct_label.setVisible(False)
             self.incorrect_label.setVisible(False)
@@ -60,29 +62,29 @@ class MainWindow(QMainWindow):
         else:
             print("letter appeared")
             self.clicked = True
-    
+
     def update(self):
-        if self.countdown_time <= 1: # Update when countdown finished/finishes
+        if self.countdown_time <= 1:  # Update when countdown finished/finishes
             self.center_button.setEnabled(True)
             self.timer.stop()
             if self.rounds >= 1:
-                if self.letterAppeared == False: # Make Letter Appear
+                if not self.letterAppeared:  # Make Letter Appear
                     self.letterAppeared = True
 
                     self.provide_random_letter()
                     self.timer.start(2000)
-                else: # Make Letter Not Appear And Check
+                else:  # Make Letter Not Appear And Check
                     self.rounds -= 1
                     self.check()
 
                     print(self.verify)
-                    if self.clicked == True and self.verify == True:
+                    if self.clicked and self.verify:
                         self.correct += 1
                         print("Correct!")
-                    elif self.clicked == False and self.verify == True:
+                    elif not self.clicked and self.verify:
                         self.missed += 1
                         print("MISSED!")
-                    elif self.clicked == True and self.verify == False:
+                    elif self.clicked and not self.verify:
                         self.incorrect += 1
                         print("Incorrect!")
                     else:
@@ -100,22 +102,25 @@ class MainWindow(QMainWindow):
             else:
                 self.letterAppeared = False
                 self.results()
-        else: # Update countdown
+        else:  # Update countdown
             print("more than 0")
             self.countdown_time -= 1
             self.center_button.setText("{}".format(self.countdown_time))
-    
+
     def provide_random_letter(self):
         letter = chr(random.randint(65, 65 + 7))
         self.universalLetter = letter
         self.center_button.setText(letter)
-    
+
     def check(self):
-        if self.universalLetter == self.first_letter or self.universalLetter == self.second_letter:
+        if (
+            self.universalLetter == self.first_letter or
+            self.universalLetter == self.second_letter
+        ):
             self.verify = True
         else:
             self.verify = False
-    
+
     def results(self):
         self.correct_label.setVisible(True)
         self.incorrect_label.setVisible(True)
@@ -133,6 +138,7 @@ class MainWindow(QMainWindow):
         self.second_letter = "nothing"
 
         self.center_button.setText("FINISHED, TRY AGAIN?")
+
 
 if __name__ == "__main__":
     app = QApplication([])
