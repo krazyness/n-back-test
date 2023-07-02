@@ -9,6 +9,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Memory Test")
+        self.resize(300, 300)
 
         self.countdown_time = 4
         self.rounds = 4
