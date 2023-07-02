@@ -31,15 +31,17 @@ class MainWindow(QMainWindow):
         self.first_letter = "nothing"
         self.second_letter = "nothing"
 
-        self.beginInfo = QPushButton("Click to start", self)
+        self.beginInfo = QPushButton("Click this button to start", self)
         self.beginInfo.setGeometry(200, 100, 300, 300)
+        self.beginInfo.setStyleSheet("background-color: rgb(0, 255, 0);")
         self.beginInfoFont = QFont()
-        self.beginInfoFont.setPointSize(14)
+        self.beginInfoFont.setPointSize(20)
         self.beginInfo.setFont(self.beginInfoFont)
         self.beginInfo.clicked.connect(self.info_click)
 
         self.center_button = QPushButton("Loading...", self)
         self.center_button.setGeometry(300, 200, 100, 100)
+        self.center_button.setStyleSheet("background-color: rgb(82, 200, 255);")
         self.center_buttonFont = QFont()
         self.center_buttonFont.setPointSize(15)
         self.center_button.setFont(self.center_buttonFont)
@@ -64,7 +66,6 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.update)
 
     def info_click(self):
-        print("info1 appeared")
         self.beginInfo.setVisible(False)
 
         self.infoTitle = QLabel("N-back working memory task", self)
@@ -95,6 +96,7 @@ class MainWindow(QMainWindow):
         self.nextButton = QPushButton('Click here for the '
                                       'next info screen', self)
         self.nextButton.setGeometry(100, 325, 220, 50)
+        self.nextButton.setStyleSheet("background-color: rgb(0, 255, 0);")
         self.nextButtonFont1 = QFont()
         self.nextButtonFont1.setPointSize(10)
         self.nextButton.setFont(self.nextButtonFont1)
@@ -103,7 +105,6 @@ class MainWindow(QMainWindow):
         self.nextButton.clicked.connect(self.info2_click)
 
     def info2_click(self):
-        print("Info2 appeared")
         self.info2.setVisible(False)
 
         self.info.setText('To help you learn this task, '
@@ -122,7 +123,6 @@ class MainWindow(QMainWindow):
         self.nextButton.clicked.connect(self.on_click)
 
     def info3_click(self):
-        print("Info3 appeared")
         self.trialsWithMatch = 0
         self.trialsWithNoMatch = 0
         self.correct = 0
@@ -150,7 +150,6 @@ class MainWindow(QMainWindow):
         self.nextButton.clicked.connect(self.on_click)
 
     def on_click(self):
-        print("clicked")
         if self.countdown_time > 1:  # Initial Click
             self.center_button.setEnabled(False)
             self.center_button.setVisible(True)
@@ -256,6 +255,7 @@ class MainWindow(QMainWindow):
         self.info.setVisible(True)
 
         self.resultButton = QPushButton("Click here to continue", self)
+        self.resultButton.setStyleSheet("background-color: rgb(0, 255, 0);")
         self.resultButton.setGeometry(100, 325, 200, 50)
         self.resultButtonFont = QFont()
         self.resultButtonFont.setPointSize(10)
