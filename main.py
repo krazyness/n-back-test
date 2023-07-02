@@ -13,7 +13,8 @@ class MainWindow(QMainWindow):
         self.resize(700, 500)
 
         self.countdown_time = 4
-        self.rounds = 4
+
+        self.trials = 25  # Can be modified to your liking
 
         self.clicked = False
         self.letterAppeared = False
@@ -57,6 +58,8 @@ class MainWindow(QMainWindow):
         self.practice_help2.setVisible(False)
         self.practice_help2.setEnabled(False)
 
+        self.rounds = self.trials
+
         self.timer = QTimer()
         self.timer.timeout.connect(self.update)
 
@@ -71,38 +74,53 @@ class MainWindow(QMainWindow):
         self.infoTitle.setFont(self.infoTitleFont)
         self.infoTitle.setVisible(True)
 
-        self.info = QLabel("In this task, you will see a sequence of letters.\nEach letter is shown for a few seconds. You need\nto decide if you saw the same letter 2 trials ago,\nthat is, this is a n=2-back task.", self)
+        self.info = QLabel('In this task, you will see a sequence '
+                           'of letters.\nEach letter is shown for a '
+                           'few seconds. You need\nto decide '
+                           'if you saw the same letter '
+                           '2 trials ago,\nthat is, '
+                           'this is a n=2-back task.', self)
         self.info.setGeometry(100, -90, 500, 500)
         self.infoFont = QFont("Arial", 15)
         self.info.setFont(self.infoFont)
         self.info.setVisible(True)
 
-        self.info2 = QLabel("If you saw the same letter 2 trials ago, you click\nit with the mouse.", self)
+        self.info2 = QLabel('If you saw the same letter 2 trials ago, '
+                            'you click\nit with the mouse.', self)
         self.info2.setGeometry(100, 10, 500, 500)
         self.info2Font = QFont("Arial", 15)
         self.info2.setFont(self.info2Font)
         self.info2.setVisible(True)
 
-        self.nextButton = QPushButton("Click here for the next info screen", self)
-        self.nextButton.setGeometry(100, 325, 200, 50)
+        self.nextButton = QPushButton('Click here for the '
+                                      'next info screen', self)
+        self.nextButton.setGeometry(100, 325, 220, 50)
         self.nextButtonFont1 = QFont()
         self.nextButtonFont1.setPointSize(10)
         self.nextButton.setFont(self.nextButtonFont1)
         self.nextButton.setVisible(True)
 
         self.nextButton.clicked.connect(self.info2_click)
-    
+
     def info2_click(self):
         print("Info2 appeared")
         self.info2.setVisible(False)
 
-        self.info.setText("To help you learn this task, at first there is a very easy\nversion. You will be reminded of the letters you saw the\ntrials before. They come left from the letter in the middle\nof the screen. They are only there to help. Later on, they\nwill not be shown anymore, and you will need to do it all\nbased on your memory.")
+        self.info.setText('To help you learn this task, '
+                          'at first there is a very easy\nversion. '
+                          'You will be reminded of the letters '
+                          'you saw the\ntrials before. They come left '
+                          'from the letter in the middle\nof the screen. '
+                          'They are only there to help. '
+                          'Later on, they\nwill not be shown anymore, '
+                          'and you will need to do it all '
+                          '\nbased on your memory.')
         self.info.setGeometry(100, -75, 500, 500)
 
         self.nextButton.setGeometry(100, 260, 225, 50)
         self.nextButton.setText("Click here to begin your practice run!")
         self.nextButton.clicked.connect(self.on_click)
-    
+
     def info3_click(self):
         print("Info3 appeared")
         self.trialsWithMatch = 0
@@ -115,11 +133,17 @@ class MainWindow(QMainWindow):
         self.resultButton.setVisible(False)
         self.nextButton.setVisible(True)
 
-        self.info.setGeometry(100, -75, 500, 500)
-        self.info.setText("Now that you have learned the n-back task, you need to\ndo it purely based on your memory. Thus, click the letter\nif it is the same as 2 letters ago.")
+        self.info.setGeometry(100, -95, 500, 500)
+        self.info.setText('Now that you have learned '
+                          'the n-back task, you need to '
+                          '\ndo it purely based on your memory. '
+                          'Thus, click the letter\nif it '
+                          'is the same as 2 letters ago.')
 
         self.info2.setVisible(True)
-        self.info2.setText("Otherwise, do nothing.\n\nConcentrate, because this is not easy.")
+        self.info2.setGeometry(100, -10, 500, 500)
+        self.info2.setText('Otherwise, do nothing.'
+                           '\n\nConcentrate, because this is not easy.')
 
         self.nextButton.setText("Click here to begin the actual test")
         self.nextButton.setGeometry(100, 310, 225, 50)
@@ -192,7 +216,7 @@ class MainWindow(QMainWindow):
             self.practiceRunFunc()
 
         self.center_button.setVisible(True)
-    
+
     def practiceRunFunc(self):
         if self.first_letter != "nothing":
             self.practice_help1.setText("{}".format(self.first_letter))
@@ -212,15 +236,23 @@ class MainWindow(QMainWindow):
     def results(self):
         self.center_button.setVisible(False)
 
-        self.rounds = 4
+        self.rounds = self.trials
         self.countdown_time = 4
 
         self.universalLetter = "nothing"
         self.first_letter = "nothing"
         self.second_letter = "nothing"
         self.center_button.setText("Loading...")
-        
-        self.info.setText("There were 25 trials total in this block.\n\nTotal trials that had a match: {}\n\nTotal trials that had no match: {}\n\nNumber of correctly matched items: {}\n\nNumber of missed items: {}\n\nNumber of false alarms: {}".format(self.trialsWithMatch, self.trialsWithNoMatch, self.correct, self.missed, self.incorrect))
+
+        self.info.setText('There were 25 trials total in this block.'
+                          '\n\nTotal trials that had a '
+                          f'match: {self.trialsWithMatch}'
+                          '\n\nTotal trials that had no '
+                          f'match: {self.trialsWithNoMatch}'
+                          '\n\nNumber of correctly matched '
+                          f'items: {self.correct}'
+                          f'\n\nNumber of missed items: {self.missed}'
+                          f'\n\nNumber of false alarms: {self.incorrect}')
         self.info.setVisible(True)
 
         self.resultButton = QPushButton("Click here to continue", self)
