@@ -12,6 +12,7 @@ LETTER_APPEAR_DURATION_SECONDS = 0.75
 PAUSE_DURATION_SECONDS = 2
 REPEAT_PROBABILITY = 0.4  # Probability of match
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -56,7 +57,8 @@ class MainWindow(QMainWindow):
 
         self.center_button = QPushButton("Loading...", self)
         self.center_button.setGeometry(300, 200, 100, 100)
-        self.center_button.setStyleSheet("background-color: rgb(82, 200, 255);")
+        self.center_button.setStyleSheet('background-color:'
+                                         ' rgb(82, 200, 255);')
         self.center_buttonFont = QFont()
         self.center_buttonFont.setPointSize(15)
         self.center_button.setFont(self.center_buttonFont)
@@ -105,21 +107,26 @@ class MainWindow(QMainWindow):
         self.info2 = QLabel('If you saw the same letter 2 trials ago, '
                             'you click\nit with the mouse.'
                             '\n\nIf correct, you will hear this sound:'
-                            '\n\nIf incorrect, you will hear this sound:', self)
+                            '\n\nIf incorrect, you '
+                            'will hear this sound:', self)
         self.info2.setGeometry(100, 40, 500, 500)
         self.info2Font = QFont("Arial", 15)
         self.info2.setFont(self.info2Font)
         self.info2.setVisible(True)
 
-        self.play_correct_button = QPushButton("Click here to play CORRECT sound", self)
+        self.play_correct_button = QPushButton('Click here to play'
+                                               ' CORRECT sound', self)
         self.play_correct_button.setGeometry(410, 275, 250, 45)
-        self.play_correct_button.setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.play_correct_button.setStyleSheet('background-color:'
+                                               ' rgb(0, 255, 0);')
         self.play_correct_button.setVisible(True)
         self.play_correct_button.clicked.connect(self.correct_sound.play)
 
-        self.play_incorrect_button = QPushButton("Click here to play INCORRECT sound", self)
+        self.play_incorrect_button = QPushButton('Click here to play'
+                                                 ' INCORRECT sound', self)
         self.play_incorrect_button.setGeometry(425, 330, 250, 45)
-        self.play_incorrect_button.setStyleSheet("background-color: rgb(252, 61, 61);")
+        self.play_incorrect_button.setStyleSheet('background-color: '
+                                                 'rgb(252, 61, 61);')
         self.play_incorrect_button.setVisible(True)
         self.play_incorrect_button.clicked.connect(self.incorrect_sound.play)
 
@@ -206,7 +213,9 @@ class MainWindow(QMainWindow):
             self.is_clicked = True
 
     def update(self):
-        if self.countdown_cnt >= COUNTDOWN:  # Update when countdown finished/finishes
+        if (
+            self.countdown_cnt >= COUNTDOWN
+        ):  # Update when countdown finished/finishes
             self.center_button.setEnabled(True)
             self.timer.stop()
             if self.rounds_cnt < TRIALS:
@@ -238,7 +247,6 @@ class MainWindow(QMainWindow):
 
                     self.is_letter_appeared = False
                     self.is_clicked = False
-    
                     self.practice_help1.setVisible(False)
                     self.practice_help2.setVisible(False)
 
@@ -252,7 +260,10 @@ class MainWindow(QMainWindow):
 
     def provide_random_letter(self):
         letter = chr(random.randint(65, 65 + 7))
-        if self.first_letter == self.second_letter and self.first_letter is not None:
+        if (
+            self.first_letter == self.second_letter and
+            self.first_letter is not None
+        ):
             while True:
                 if letter == self.first_letter:
                     letter = chr(random.randint(65, 65 + 7))
