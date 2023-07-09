@@ -180,9 +180,8 @@ class MainWindow(QMainWindow):
                           '\nbased on your memory.')
         self.info.setGeometry(100, -75, 500, 500)
 
-        self.info2.setText('Tip: Keep your cursor at '
-                           'the center button\nso that '
-                           'you won\'t miss a click.')
+        self.info2.setText('Tip: You can click outside of the box\n'
+                           'so your cursor doesn\'t block the letter')
 
         self.nextButton.setGeometry(100, 350, 250, 50)
         self.nextButton.setText("Click here to begin your practice run!")
