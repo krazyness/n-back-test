@@ -50,9 +50,11 @@ class MainWindow(QMainWindow):
         self.incorrect_sound.setAudioOutput(self.incorrect_sound_output)
         self.incorrect_sound.setSource(QUrl.fromLocalFile("WrongChoice.wav"))
 
-        self.directory_button = QPushButton("Choose a file to\nsave your results in", self)
+        self.directory_button = QPushButton('Choose a file to\nsave '
+                                            'your results in', self)
         self.directory_button.setGeometry(250, 150, 200, 200)
-        self.directory_button.setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.directory_button.setStyleSheet('background-color: '
+                                            'rgb(0, 255, 0);')
         directory_buttonFont = QFont()
         directory_buttonFont.setPointSize(15)
         self.directory_button.setFont(directory_buttonFont)
@@ -102,7 +104,7 @@ class MainWindow(QMainWindow):
                     file.write("")
             except IOError:
                 print("An error occurred while creating/saving the file.")
-        
+
         if self.file_path is not None:
             self.directory_button.setVisible(False)
             self.info_click()
@@ -215,7 +217,7 @@ class MainWindow(QMainWindow):
         self.nextButton.setText("Click here to begin the 2-back test")
         self.nextButton.setGeometry(100, 310, 225, 50)
         self.nextButton.clicked.connect(self.on_click)
-    
+
     def info4_click(self):
         self.trials_with_match_cnt = 0
         self.trials_with_no_match_cnt = 0
@@ -252,7 +254,7 @@ class MainWindow(QMainWindow):
         self.nextButton.setText("Click here to begin the 3-back test")
         self.nextButton.setGeometry(100, 310, 225, 50)
         self.nextButton.clicked.connect(self.on_click)
-    
+
     def finish_screen(self):
         self.infoTitle.setVisible(True)
         self.info.setVisible(True)
@@ -388,19 +390,22 @@ class MainWindow(QMainWindow):
         self.center_button.setText("Loading...")
 
         if self.is_practice:
-            self.info.setText(f'There were {TRIALS} trials total in this block.'
-                               '\n\nTotal trials that had a '
+            self.info.setText(f'There were {TRIALS} '
+                              'trials total in this block.'
+                              '\n\nTotal trials that had a '
                               f'match: {self.trials_with_match_cnt}'
-                               '\n\nTotal trials that had no '
+                              '\n\nTotal trials that had no '
                               f'match: {self.trials_with_no_match_cnt}'
-                               '\n\nNumber of correctly matched '
+                              '\n\nNumber of correctly matched '
                               f'items: {self.correct_cnt}'
                               f'\n\nNumber of missed items: {self.missed_cnt}'
-                              f'\n\nNumber of false alarms: {self.incorrect_cnt}')
+                              '\n\nNumber of false alarms: '
+                              f'{self.incorrect_cnt}')
             self.info.setVisible(True)
 
             self.resultButton = QPushButton("Click here to continue", self)
-            self.resultButton.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.resultButton.setStyleSheet('background-color: '
+                                            'rgb(0, 255, 0);')
             self.resultButton.setGeometry(100, 325, 200, 50)
             resultButtonFont = QFont()
             resultButtonFont.setPointSize(10)
@@ -416,11 +421,11 @@ class MainWindow(QMainWindow):
                 roundType = "2-Back Test"
 
             data = (f'Round Type: {roundType}\n'
-                   f'Trials With A Match: {self.trials_with_match_cnt}\n'
-                   f'Trials With No Match: {self.trials_with_no_match_cnt}\n'
-                   f'Number Of Correctly Matched Items: {self.correct_cnt}\n'
-                   f'Number Of Missed Items: {self.missed_cnt}\n'
-                   f'Number Of False Alarms: {self.incorrect_cnt}\n')
+                    f'Trials With A Match: {self.trials_with_match_cnt}\n'
+                    f'Trials With No Match: {self.trials_with_no_match_cnt}\n'
+                    f'Number Of Correctly Matched Items: {self.correct_cnt}\n'
+                    f'Number Of Missed Items: {self.missed_cnt}\n'
+                    f'Number Of False Alarms: {self.incorrect_cnt}\n')
 
             try:
                 with open(self.file_path, "a") as file:
@@ -429,7 +434,7 @@ class MainWindow(QMainWindow):
             except IOError:
                 print("An error occurred while saving the file.")
 
-            if self.is_3_back == False:
+            if not self.is_3_back:
                 self.is_3_back = True
 
             if roundType == "2-Back Test":
