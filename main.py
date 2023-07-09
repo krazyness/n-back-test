@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import random
+import sys
 from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
@@ -22,6 +23,7 @@ class MainWindow(QMainWindow):
         self.is_clicked = False
         self.is_letter_appeared = False
         self.is_practice = True
+        self.is_3_back = False
 
         self.correct_cnt = 0
         self.incorrect_cnt = 0
@@ -29,9 +31,10 @@ class MainWindow(QMainWindow):
         self.trials_with_match_cnt = 0
         self.trials_with_no_match_cnt = 0
 
-        self.universal_letter = None
+        self.current_letter = None
         self.first_letter = None
         self.second_letter = None
+        self.third_letter = None
 
         self.correct_sound_output = QAudioOutput()
         self.correct_sound_output.setVolume(50)
@@ -47,33 +50,34 @@ class MainWindow(QMainWindow):
         self.incorrect_sound.setAudioOutput(self.incorrect_sound_output)
         self.incorrect_sound.setSource(QUrl.fromLocalFile("WrongChoice.wav"))
 
-        self.beginInfo = QPushButton("Click this button to start", self)
-        self.beginInfo.setGeometry(200, 100, 300, 300)
-        self.beginInfo.setStyleSheet("background-color: rgb(0, 255, 0);")
-        self.beginInfoFont = QFont()
-        self.beginInfoFont.setPointSize(16)
-        self.beginInfo.setFont(self.beginInfoFont)
-        self.beginInfo.clicked.connect(self.info_click)
+        self.directory_button = QPushButton("Choose a file to\nsave your results in", self)
+        self.directory_button.setGeometry(250, 150, 200, 200)
+        self.directory_button.setStyleSheet("background-color: rgb(0, 255, 0);")
+        directory_buttonFont = QFont()
+        directory_buttonFont.setPointSize(15)
+        self.directory_button.setFont(directory_buttonFont)
+        self.directory_button.setVisible(True)
+        self.directory_button.clicked.connect(self.get_directory)
 
         self.center_button = QPushButton("Loading...", self)
         self.center_button.setGeometry(300, 200, 100, 100)
         self.center_button.setStyleSheet('background-color:'
                                          ' rgb(82, 200, 255);')
-        self.center_buttonFont = QFont()
-        self.center_buttonFont.setPointSize(15)
-        self.center_button.setFont(self.center_buttonFont)
+        center_buttonFont = QFont()
+        center_buttonFont.setPointSize(15)
+        self.center_button.setFont(center_buttonFont)
         self.center_button.clicked.connect(self.on_click)
         self.center_button.setVisible(False)
 
         self.practice_help1 = QPushButton("", self)
         self.practice_help1.setGeometry(175, 200, 100, 100)
-        self.practice_help1.setFont(self.center_buttonFont)
+        self.practice_help1.setFont(center_buttonFont)
         self.practice_help1.setVisible(False)
         self.practice_help1.setEnabled(False)
 
         self.practice_help2 = QPushButton("", self)
         self.practice_help2.setGeometry(50, 200, 100, 100)
-        self.practice_help2.setFont(self.center_buttonFont)
+        self.practice_help2.setFont(center_buttonFont)
         self.practice_help2.setVisible(False)
         self.practice_help2.setEnabled(False)
 
@@ -83,14 +87,34 @@ class MainWindow(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.update)
 
-    def info_click(self):
-        self.beginInfo.setVisible(False)
+    def get_directory(self):
+        file_dialog = QFileDialog(self)
+        file_dialog.setAcceptMode(QFileDialog.AcceptSave)
+        file_dialog.setDefaultSuffix("txt")
 
+        self.file_path = None
+
+        if file_dialog.exec() == QFileDialog.Accepted:
+            self.file_path = file_dialog.selectedFiles()[0]
+
+            try:
+                with open(self.file_path, "w") as file:
+                    file.write("")
+            except IOError:
+                print("An error occurred while creating/saving the file.")
+        
+        if self.file_path is not None:
+            self.directory_button.setVisible(False)
+            self.info_click()
+        else:
+            sys.exit()
+
+    def info_click(self):
         self.infoTitle = QLabel("N-back working memory task", self)
         self.infoTitle.setGeometry(100, 50, 500, 50)
-        self.infoTitleFont = QFont("Arial", 20)
-        self.infoTitleFont.setBold(True)
-        self.infoTitle.setFont(self.infoTitleFont)
+        infoTitleFont = QFont("Arial", 20)
+        infoTitleFont.setBold(True)
+        self.infoTitle.setFont(infoTitleFont)
         self.infoTitle.setVisible(True)
 
         self.info = QLabel('In this task, you will see a sequence '
@@ -100,8 +124,8 @@ class MainWindow(QMainWindow):
                            '2 trials ago,\nthat is, '
                            'this is a n=2-back task.', self)
         self.info.setGeometry(100, -90, 500, 500)
-        self.infoFont = QFont("Arial", 15)
-        self.info.setFont(self.infoFont)
+        infoFont = QFont("Arial", 15)
+        self.info.setFont(infoFont)
         self.info.setVisible(True)
 
         self.info2 = QLabel('If you saw the same letter 2 trials ago, '
@@ -110,23 +134,21 @@ class MainWindow(QMainWindow):
                             '\n\nIf incorrect, you '
                             'will hear this sound:', self)
         self.info2.setGeometry(100, 40, 500, 500)
-        self.info2Font = QFont("Arial", 15)
-        self.info2.setFont(self.info2Font)
+        info2Font = QFont("Arial", 15)
+        self.info2.setFont(info2Font)
         self.info2.setVisible(True)
 
-        self.play_correct_button = QPushButton('Click here to play'
-                                               ' CORRECT sound', self)
-        self.play_correct_button.setGeometry(410, 275, 250, 45)
+        self.play_correct_button = QPushButton('PLAY', self)
+        self.play_correct_button.setGeometry(425, 275, 250, 45)
         self.play_correct_button.setStyleSheet('background-color:'
                                                ' rgb(0, 255, 0);')
         self.play_correct_button.setVisible(True)
         self.play_correct_button.clicked.connect(self.correct_sound.play)
 
-        self.play_incorrect_button = QPushButton('Click here to play'
-                                                 ' INCORRECT sound', self)
+        self.play_incorrect_button = QPushButton('PLAY', self)
         self.play_incorrect_button.setGeometry(425, 330, 250, 45)
         self.play_incorrect_button.setStyleSheet('background-color: '
-                                                 'rgb(252, 61, 61);')
+                                                 'rgb(0, 255, 0);')
         self.play_incorrect_button.setVisible(True)
         self.play_incorrect_button.clicked.connect(self.incorrect_sound.play)
 
@@ -134,9 +156,9 @@ class MainWindow(QMainWindow):
                                       'next info screen', self)
         self.nextButton.setGeometry(100, 390, 250, 50)
         self.nextButton.setStyleSheet("background-color: rgb(0, 255, 0);")
-        self.nextButtonFont1 = QFont()
-        self.nextButtonFont1.setPointSize(10)
-        self.nextButton.setFont(self.nextButtonFont1)
+        nextButtonFont1 = QFont()
+        nextButtonFont1.setPointSize(10)
+        self.nextButton.setFont(nextButtonFont1)
         self.nextButton.setVisible(True)
 
         self.nextButton.clicked.connect(self.info2_click)
@@ -190,9 +212,55 @@ class MainWindow(QMainWindow):
         self.info2.setText('Otherwise, do nothing.'
                            '\n\nConcentrate, because this is not easy.')
 
-        self.nextButton.setText("Click here to begin the actual test")
+        self.nextButton.setText("Click here to begin the 2-back test")
         self.nextButton.setGeometry(100, 310, 225, 50)
         self.nextButton.clicked.connect(self.on_click)
+    
+    def info4_click(self):
+        self.trials_with_match_cnt = 0
+        self.trials_with_no_match_cnt = 0
+        self.correct_cnt = 0
+        self.missed_cnt = 0
+        self.incorrect_cnt = 0
+
+        self.countdown_cnt = 0
+        self.rounds_cnt = 0
+
+        self.infoTitle.setVisible(True)
+        self.resultButton.setVisible(False)
+        self.nextButton.setVisible(True)
+
+        self.info.setVisible(True)
+        self.info.setGeometry(100, -75, 500, 500)
+        self.info.setText('Congratulations on completing'
+                          ' the 2-back test! '
+                          'Now,\nit\'s time to challenge'
+                          ' yourself further with the 3-back test.'
+                          '\nIn this task, you will be presented '
+                          'with a sequence of\nletters, similar '
+                          'to the previous test. This time, '
+                          'you need\nto determine if the '
+                          'current letter matches the one'
+                          '\npresented 3 trials ago.')
+
+        self.info2.setVisible(True)
+        self.info2.setGeometry(100, 20, 500, 500)
+        self.info2.setText('Concentrate, and try '
+                           'your best because this is '
+                           'not easy.')
+
+        self.nextButton.setText("Click here to begin the 3-back test")
+        self.nextButton.setGeometry(100, 310, 225, 50)
+        self.nextButton.clicked.connect(self.on_click)
+    
+    def finish_screen(self):
+        self.infoTitle.setVisible(True)
+        self.info.setVisible(True)
+
+        self.infoTitle.setText("You Finished!")
+        self.info.setText('Congratulations! You successfully completed '
+                          'the 2-back\nand 3-back test! '
+                          'You may now close the test window.')
 
     def on_click(self):
         if self.countdown_cnt < COUNTDOWN:  # Initial Click
@@ -242,8 +310,9 @@ class MainWindow(QMainWindow):
                         elif not self.is_clicked:
                             pass
 
+                    self.third_letter = self.second_letter
                     self.second_letter = self.first_letter
-                    self.first_letter = self.universal_letter
+                    self.first_letter = self.current_letter
 
                     self.is_letter_appeared = False
                     self.is_clicked = False
@@ -260,26 +329,27 @@ class MainWindow(QMainWindow):
 
     def provide_random_letter(self):
         letter = chr(random.randint(65, 65 + 7))
-        if (
-            self.first_letter == self.second_letter and
-            self.first_letter is not None
-        ):
+        if letter == self.first_letter:
             while True:
                 if letter == self.first_letter:
                     letter = chr(random.randint(65, 65 + 7))
                 else:
-                    self.universal_letter = letter
+                    self.current_letter = letter
                     self.center_button.setText(letter)
                     break
         elif self.second_letter is not None:
             if random.random() <= REPEAT_PROBABILITY:
-                self.universal_letter = self.second_letter
-                self.center_button.setText(self.second_letter)
+                if not self.is_3_back:
+                    self.current_letter = self.second_letter
+                    self.center_button.setText(self.current_letter)
+                else:
+                    self.current_letter = self.third_letter
+                    self.center_button.setText(self.current_letter)
             else:
-                self.universal_letter = letter
+                self.current_letter = letter
                 self.center_button.setText(letter)
         else:
-            self.universal_letter = letter
+            self.current_letter = letter
             self.center_button.setText(letter)
 
         if self.is_practice:
@@ -293,44 +363,79 @@ class MainWindow(QMainWindow):
         self.center_button.setVisible(True)
 
     def check(self):
-        if self.universal_letter == self.second_letter:
-            self.trials_with_match_cnt += 1
-            return True
+        if self.is_3_back:
+            if self.current_letter == self.third_letter:
+                self.trials_with_match_cnt += 1
+                return True
+            else:
+                self.trials_with_no_match_cnt += 1
+                return False
         else:
-            self.trials_with_no_match_cnt += 1
-            return False
+            if self.current_letter == self.second_letter:
+                self.trials_with_match_cnt += 1
+                return True
+            else:
+                self.trials_with_no_match_cnt += 1
+                return False
 
     def results(self):
         self.center_button.setVisible(False)
-
         self.rounds_cnt = 0
 
-        self.universal_letter = None
+        self.current_letter = None
         self.first_letter = None
         self.second_letter = None
         self.center_button.setText("Loading...")
 
-        self.info.setText(f'There were {TRIALS} trials total in this block.'
-                          '\n\nTotal trials that had a '
-                          f'match: {self.trials_with_match_cnt}'
-                          '\n\nTotal trials that had no '
-                          f'match: {self.trials_with_no_match_cnt}'
-                          '\n\nNumber of correctly matched '
-                          f'items: {self.correct_cnt}'
-                          f'\n\nNumber of missed items: {self.missed_cnt}'
-                          f'\n\nNumber of false alarms: {self.incorrect_cnt}')
-        self.info.setVisible(True)
+        if self.is_practice:
+            self.info.setText(f'There were {TRIALS} trials total in this block.'
+                               '\n\nTotal trials that had a '
+                              f'match: {self.trials_with_match_cnt}'
+                               '\n\nTotal trials that had no '
+                              f'match: {self.trials_with_no_match_cnt}'
+                               '\n\nNumber of correctly matched '
+                              f'items: {self.correct_cnt}'
+                              f'\n\nNumber of missed items: {self.missed_cnt}'
+                              f'\n\nNumber of false alarms: {self.incorrect_cnt}')
+            self.info.setVisible(True)
 
-        self.resultButton = QPushButton("Click here to continue", self)
-        self.resultButton.setStyleSheet("background-color: rgb(0, 255, 0);")
-        self.resultButton.setGeometry(100, 325, 200, 50)
-        self.resultButtonFont = QFont()
-        self.resultButtonFont.setPointSize(10)
-        self.resultButton.setFont(self.resultButtonFont)
-        self.resultButton.setVisible(True)
-        self.resultButton.clicked.connect(self.info3_click)
+            self.resultButton = QPushButton("Click here to continue", self)
+            self.resultButton.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.resultButton.setGeometry(100, 325, 200, 50)
+            resultButtonFont = QFont()
+            resultButtonFont.setPointSize(10)
+            self.resultButton.setFont(resultButtonFont)
+            self.resultButton.setVisible(True)
+            self.resultButton.clicked.connect(self.info3_click)
 
-        self.is_practice = False
+            self.is_practice = False
+        else:
+            if self.is_3_back:
+                roundType = "3-Back Test"
+            else:
+                roundType = "2-Back Test"
+
+            data = (f'Round Type: {roundType}\n'
+                   f'Trials With A Match: {self.trials_with_match_cnt}\n'
+                   f'Trials With No Match: {self.trials_with_no_match_cnt}\n'
+                   f'Number Of Correctly Matched Items: {self.correct_cnt}\n'
+                   f'Number Of Missed Items: {self.missed_cnt}\n'
+                   f'Number Of False Alarms: {self.incorrect_cnt}\n')
+
+            try:
+                with open(self.file_path, "a") as file:
+                    file.write(data)
+                print("File saved")
+            except IOError:
+                print("An error occurred while saving the file.")
+
+            if self.is_3_back == False:
+                self.is_3_back = True
+
+            if roundType == "2-Back Test":
+                self.info4_click()
+            elif roundType == "3-Back Test":
+                self.finish_screen()
 
 
 if __name__ == "__main__":
