@@ -11,7 +11,7 @@ COUNTDOWN = 3
 
 LETTER_APPEAR_DURATION_SECONDS = 0.75
 PAUSE_DURATION_SECONDS = 2
-REPEAT_PROBABILITY = 0.4  # Probability of match
+REPEAT_PROBABILITY = 0.28  # Probability of match
 
 
 class MainWindow(QMainWindow):
@@ -131,7 +131,7 @@ class MainWindow(QMainWindow):
         self.info.setVisible(True)
 
         self.info2 = QLabel('If you saw the same letter 2 trials ago, '
-                            'you click\nit with the mouse.'
+                            'you click\nthe window with the mouse.'
                             '\n\nIf correct, you will hear this sound:'
                             '\n\nIf incorrect, you '
                             'will hear this sound:', self)
@@ -263,6 +263,17 @@ class MainWindow(QMainWindow):
         self.info.setText('Congratulations! You successfully completed '
                           'the 2-back\nand 3-back test! '
                           'You may now close the test window.')
+    
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.LeftButton:
+            if self.is_letter_appeared and not self.is_clicked:
+                self.is_clicked = True
+                if self.check():
+                    self.correct_sound.play()
+                    self.correct_cnt += 1
+                else:
+                    self.incorrect_sound.play()
+                    self.incorrect_cnt += 1
 
     def on_click(self):
         if self.countdown_cnt < COUNTDOWN:  # Initial Click
@@ -279,38 +290,41 @@ class MainWindow(QMainWindow):
             self.missed_cnt = 0
 
             self.timer.start(1000)
+
+        if self.is_practice or not self.is_3_back:
+            self.get_random_letters(TRIALS, round(TRIALS * REPEAT_PROBABILITY), 2)
         else:
-            self.is_clicked = True
+            self.get_random_letters(TRIALS, round(TRIALS * REPEAT_PROBABILITY), 3)
 
     def update(self):
-        if (
-            self.countdown_cnt >= COUNTDOWN
-        ):  # Update when countdown finished/finishes
-            self.center_button.setEnabled(True)
+        if self.countdown_cnt >= COUNTDOWN:
+            #self.center_button.setEnabled(True)
             self.timer.stop()
             if self.rounds_cnt < TRIALS:
                 if not self.is_letter_appeared:  # Make Letter Appear
                     self.is_letter_appeared = True
+                    self.center_button.setVisible(True)
 
-                    self.provide_random_letter()
+                    self.center_button.setText(f"{self.random_letters_list[self.rounds_cnt]}")
+                    self.current_letter = self.random_letters_list[self.rounds_cnt]
+
+                    if self.is_practice:
+                        if self.first_letter is not None:
+                            self.practice_help1.setText(f"{self.first_letter}")
+                            self.practice_help1.setVisible(True)
+                        if self.second_letter is not None:
+                            self.practice_help2.setText(f"{self.second_letter}")
+                            self.practice_help2.setVisible(True)
+
                     self.timer.start(LETTER_APPEAR_DURATION_SECONDS * 1000)
                 else:  # Make Letter Not Appear And Check
                     self.rounds_cnt += 1
                     self.center_button.setVisible(False)
-
-                    if self.check():
-                        if self.is_clicked:
-                            self.correct_cnt += 1
-                            self.correct_sound.play()
-                        elif not self.is_clicked:
+                    
+                    if not self.is_clicked:
+                        if self.check():
                             self.incorrect_cnt += 1
                             self.incorrect_sound.play()
-                    else:
-                        if self.is_clicked:
-                            self.incorrect_cnt += 1
-                            self.incorrect_sound.play()
-                        elif not self.is_clicked:
-                            pass
 
                     self.third_letter = self.second_letter
                     self.second_letter = self.first_letter
@@ -329,40 +343,20 @@ class MainWindow(QMainWindow):
             self.center_button.setText(f"{COUNTDOWN-self.countdown_cnt}")
             self.countdown_cnt += 1
 
-    def provide_random_letter(self):
-        letter = chr(random.randint(65, 65 + 7))
-        if letter == self.first_letter:
-            while True:
-                if letter == self.first_letter:
-                    letter = chr(random.randint(65, 65 + 7))
-                else:
-                    self.current_letter = letter
-                    self.center_button.setText(letter)
-                    break
-        elif self.second_letter is not None:
-            if random.random() <= REPEAT_PROBABILITY:
-                if not self.is_3_back:
-                    self.current_letter = self.second_letter
-                    self.center_button.setText(self.current_letter)
-                else:
-                    self.current_letter = self.third_letter
-                    self.center_button.setText(self.current_letter)
+    def get_random_letters(self, trials, matches, n_back):
+        locations = random.sample(list(range(trials-n_back)), matches)
+        locations = set(locations)
+        # constant alphabet A-Z
+        a2z = list(map(chr, range(65, 91)))
+        # generate n_back letters
+        letters = random.choices(a2z, k=n_back)
+        # generate the rest letters
+        for i in range(trials-n_back):
+            if i in locations:
+                letters.append(letters[i])
             else:
-                self.current_letter = letter
-                self.center_button.setText(letter)
-        else:
-            self.current_letter = letter
-            self.center_button.setText(letter)
-
-        if self.is_practice:
-            if self.first_letter is not None:
-                self.practice_help1.setText(f"{self.first_letter}")
-                self.practice_help1.setVisible(True)
-            if self.second_letter is not None:
-                self.practice_help2.setText(f"{self.second_letter}")
-                self.practice_help2.setVisible(True)
-
-        self.center_button.setVisible(True)
+                letters.append(random.choice(a2z))
+        self.random_letters_list = letters
 
     def check(self):
         if self.is_3_back:
@@ -446,5 +440,6 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication([])
     window = MainWindow()
+    window.installEventFilter(window)
     window.show()
     app.exec()
