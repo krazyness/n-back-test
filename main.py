@@ -16,23 +16,12 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Memory Test")
         self.resize(700, 500)
 
-        self.is_clicked = False
-        self.is_letter_appeared = False
-        self.is_practice = True
-        self.n_back = 2
-
         self.TRIALS = trials
         self.MINIMUM_MATCHES = matches
         self.LETTER_DURATION = letterduration
         self.PAUSE_DURATION = pause
 
-        self.debounce = False
-
-        self.correct_cnt = 0
-        self.incorrect_cnt = 0
-        self.missed_cnt = 0
-        self.trials_with_match_cnt = 0
-        self.trials_with_no_match_cnt = 0
+        self.reset(2, trials, matches, True)
 
         self.correct_sound_output = QAudioOutput()
         self.correct_sound_output.setVolume(50)
@@ -67,7 +56,7 @@ class MainWindow(QMainWindow):
         center_buttonFont.setPointSize(15)
         self.center_button.setFont(center_buttonFont)
         self.center_button.setVisible(False)
-        self.center_button.clicked.connect(self.on_click)
+        self.center_button.clicked.connect(lambda: self.check(True))
 
         self.practice_help1 = QPushButton("", self)
         self.practice_help1.setGeometry(175, 200, 100, 100)
@@ -81,20 +70,38 @@ class MainWindow(QMainWindow):
         self.practice_help2.setVisible(False)
         self.practice_help2.setEnabled(False)
 
-        self.rounds_cnt = 0
-        self.countdown_cnt = 0
-
         self.timer = QTimer()
         self.timer.timeout.connect(self.update)
 
-    def reset(self):
+    def reset(self, n_back, trials, matches, is_practice):
+        self.n_back = n_back
+        self.is_practice = is_practice
         self.trials_with_match_cnt = 0
-        self.trials_with_no_match_cnt = 0
         self.correct_cnt = 0
         self.missed_cnt = 0
         self.incorrect_cnt = 0
         self.countdown_cnt = 0
         self.rounds_cnt = 0
+        self.debounce = False
+        self.is_letter_appeared = False
+        self.clicks = []
+    #def get_random_letters(self, trials, matches, n_back):
+        locations = random.sample(list(range(trials-n_back)), matches)
+        locations = set(locations)
+        # constant alphabet A-Z
+        a2z = list(map(chr, range(65, 91)))
+        # generate n_back letters
+        letters = random.choices(a2z, k=n_back)
+        # generate the rest letters
+        for i in range(trials-n_back):
+            if i in locations:
+                new = letters[i]
+            else:
+                new = random.choice(a2z)
+            letters.append(new)
+            if new == letters[i]:
+                self.trials_with_match_cnt +=1
+        self.random_letters_list = letters
 
     def get_directory(self):
         file_dialog = QFileDialog(self)
@@ -188,7 +195,8 @@ class MainWindow(QMainWindow):
         self.info.setGeometry(100, -75, 500, 500)
 
         self.info2.setText('Tip: You can click outside of the box\n'
-                           'so your cursor doesn\'t block the letter')
+                           'so your cursor doesn\'t block '
+                           'the displayed letter')
 
         self.nextButton.setGeometry(100, 350, 250, 50)
         self.nextButton.setText("Click here to begin your practice run!")
@@ -213,10 +221,8 @@ class MainWindow(QMainWindow):
 
         self.nextButton.setText("Click here to begin the 2-back test")
         self.nextButton.setGeometry(100, 310, 225, 50)
-        self.nextButton.clicked.connect(self.on_click)
-
+        self.nextButton.clicked.connect(lambda: self.on_click)
     def info4(self):
-        self.info.setVisible(True)
         self.info.setGeometry(100, -75, 500, 500)
         self.info.setText('Congratulations on completing'
                           ' the 2-back test! '
@@ -229,7 +235,6 @@ class MainWindow(QMainWindow):
                           'current letter matches the one'
                           '\npresented 3 trials ago.')
 
-        self.info2.setVisible(True)
         self.info2.setGeometry(100, 20, 500, 500)
         self.info2.setText('Concentrate, and try '
                            'your best because this is '
@@ -237,7 +242,6 @@ class MainWindow(QMainWindow):
 
         self.nextButton.setText("Click here to begin the 3-back test")
         self.nextButton.setGeometry(100, 310, 225, 50)
-        self.nextButton.clicked.connect(self.on_click)
 
     def finish_screen(self):
         self.infoTitle.setText("You Finished!")
@@ -247,129 +251,92 @@ class MainWindow(QMainWindow):
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.LeftButton:
-            if self.is_letter_appeared and not self.is_clicked:
-                self.clicked_during_testing()
-
-    def clicked_during_testing(self):
-        self.is_clicked = True
-        if self.check():
-            self.correct_sound.play()
-            self.correct_cnt += 1
-        else:
-            self.incorrect_sound.play()
-            self.incorrect_cnt += 1
+            if self.is_letter_appeared:
+                self.check(True)
 
     def on_click(self):
-        if not self.debounce:
-            self.debounce = True
-            if self.countdown_cnt < COUNTDOWN:
-                self.center_button.setEnabled(False)
-                self.center_button.setVisible(True)
-
-                self.nextButton.setVisible(False)
-                self.info.setVisible(False)
-                self.infoTitle.setVisible(False)
-                self.info2.setVisible(False)
-
-                self.correct_cnt = 0
-                self.incorrect_cnt = 0
-                self.missed_cnt = 0
-
-                self.timer.start(1000)
-
-                self.get_random_letters(self.TRIALS, self.MINIMUM_MATCHES, self.n_back)
-            else:
-                self.clicked_during_testing()
+        if self.countdown_cnt < COUNTDOWN:
+            self.center_button.setEnabled(False)
+            self.center_button.setVisible(True)
+ 
+            self.nextButton.setVisible(False)
+            self.info.setVisible(False)
+            self.infoTitle.setVisible(False)
+            self.info2.setVisible(False)
+ 
+            self.correct_cnt = 0
+            self.incorrect_cnt = 0
+            self.missed_cnt = 0
+ 
+            self.timer.start(1000)
+        else:
+            self.check(True)
 
     def update(self):
-        if self.countdown_cnt >= COUNTDOWN:
-            self.timer.stop()
-            if self.rounds_cnt < self.TRIALS:
-                if not self.is_letter_appeared:  # Make Letter Appear
-                    self.is_letter_appeared = True
-                    self.center_button.setVisible(True)
-                    self.center_button.setEnabled(True)
-                    self.debounce = False
-
-                    self.center_button.setText(f"{self.random_letters_list[self.rounds_cnt]}")
-
-                    if self.is_practice:
-                        if self.rounds_cnt > 0:
-                            self.practice_help1.setText(f"{self.random_letters_list[self.rounds_cnt-1]}")
-                            self.practice_help1.setVisible(True)
-                        if self.rounds_cnt > 1:
-                            self.practice_help2.setText(f"{self.random_letters_list[self.rounds_cnt-2]}")
-                            self.practice_help2.setVisible(True)
-
-                    self.timer.start(self.LETTER_DURATION * 1000)
-                else:  # Make Letter Not Appear And Check
-                    self.is_letter_appeared = False
-                    self.center_button.setVisible(False)
-
-                    if not self.is_clicked:
-                        if self.check():
-                            self.missed_cnt += 1
-                            self.incorrect_sound.play()
-
-                    self.is_clicked = False
-                    self.practice_help1.setVisible(False)
-                    self.practice_help2.setVisible(False)
-
-                    self.rounds_cnt += 1
-
-                    self.timer.start(self.PAUSE_DURATION * 1000)
-            else:
-                self.is_letter_appeared = False
-                self.results()
-        else:  # Update countdown
+        if self.countdown_cnt < COUNTDOWN:
             self.center_button.setText(f"{COUNTDOWN-self.countdown_cnt}")
             self.countdown_cnt += 1
+            return
+        self.timer.stop()
+        if self.rounds_cnt < self.TRIALS:
+            if not self.is_letter_appeared:  # Make Letter Appear
+                self.is_letter_appeared = True
+                self.center_button.setVisible(True)
+                self.center_button.setEnabled(True)
+                self.debounce = False
 
-    def get_random_letters(self, trials, matches, n_back):
-        locations = random.sample(list(range(trials-n_back)), matches)
-        locations = set(locations)
-        # constant alphabet A-Z
-        a2z = list(map(chr, range(65, 91)))
-        # generate n_back letters
-        letters = random.choices(a2z, k=n_back)
-        # generate the rest letters
-        for i in range(trials-n_back):
-            if i in locations:
-                letters.append(letters[i])
-            else:
-                letters.append(random.choice(a2z))
-        self.random_letters_list = letters
+                self.center_button.setText(f"{self.random_letters_list[self.rounds_cnt]}")
 
-    def check(self):
-        current = self.random_letters_list[self.rounds_cnt]
-        if self.n_back == 3:
-            if current == self.random_letters_list[self.rounds_cnt - 3]:
-                self.trials_with_match_cnt += 1
-                return True
+                if self.is_practice:
+                    if self.rounds_cnt > 0:
+                        self.practice_help1.setText(f"{self.random_letters_list[self.rounds_cnt-1]}")
+                        self.practice_help1.setVisible(True)
+                    if self.rounds_cnt > 1:
+                        self.practice_help2.setText(f"{self.random_letters_list[self.rounds_cnt-2]}")
+                        self.practice_help2.setVisible(True)
+
+                self.timer.start(self.LETTER_DURATION * 1000)
+            else:  # Make Letter Not Appear And Check
+                self.is_letter_appeared = False
+                self.center_button.setVisible(False)
+                self.check(False)
+                self.practice_help1.setVisible(False)
+                self.practice_help2.setVisible(False)
+
+                self.rounds_cnt += 1
+
+                self.timer.start(self.PAUSE_DURATION * 1000)
+        else:
+            self.is_letter_appeared = False
+            self.results()
+
+    def check(self, clicked):
+        if len(self.clicks) > self.rounds_cnt:
+            return
+        self.clicks.append(clicked)
+        if self.rounds_cnt < self.n_back:
+            return
+        matched = self.random_letters_list[self.rounds_cnt] == self.random_letters_list[self.rounds_cnt - self.n_back]
+        if clicked:
+            if matched:
+                self.correct_sound.play()
+                self.correct_cnt += 1
             else:
-                self.trials_with_no_match_cnt += 1
-                return False
-        elif self.n_back == 2:
-            if current == self.random_letters_list[self.rounds_cnt - 2]:
-                self.trials_with_match_cnt += 1
-                return True
-            else:
-                self.trials_with_no_match_cnt += 1
-                return False
+                self.incorrect_sound.play()
+                self.incorrect_cnt += 1
+        elif matched:
+            self.incorrect_sound.play()
+            self.missed_cnt += 1
 
     def results(self):
         self.center_button.setVisible(False)
-        self.rounds_cnt = 0
         self.center_button.setText("Loading...")
-        self.debounce = False
 
         if self.is_practice:
             self.info.setText(f'There were {self.TRIALS} '
                               'trials total in this block.'
                               '\n\nTotal trials that had a '
                               f'match: {self.trials_with_match_cnt}'
-                              '\n\nTotal trials that had no '
-                              f'match: {self.trials_with_no_match_cnt}'
                               '\n\nNumber of correctly matched '
                               f'items: {self.correct_cnt}'
                               f'\n\nNumber of missed items: {self.missed_cnt}'
@@ -377,7 +344,7 @@ class MainWindow(QMainWindow):
                               f'{self.incorrect_cnt}')
             self.info.setVisible(True)
 
-            self.reset()
+            self.reset(2, self.TRIALS, self.MINIMUM_MATCHES, False)
 
             self.resultButton = QPushButton("Click here to continue", self)
             self.resultButton.setStyleSheet('background-color: '
@@ -388,17 +355,15 @@ class MainWindow(QMainWindow):
             self.resultButton.setFont(resultButtonFont)
             self.resultButton.setVisible(True)
             self.resultButton.clicked.connect(self.info3_click)
-
-            self.is_practice = False
         else:
             data = (f'Round Type: {self.n_back}-Back Test\n'
                     f'Number of Trials: {self.TRIALS}\n'
                     f'Trials With A Match: {self.trials_with_match_cnt}\n'
-                    f'Trials With No Match: {self.trials_with_no_match_cnt}\n'
                     f'Number Of Correctly Matched Items: {self.correct_cnt}\n'
                     f'Number Of Missed Items: {self.missed_cnt}\n'
                     f'Number Of False Alarms: {self.incorrect_cnt}\n'
-                    f'Letters Presented: {self.random_letters_list}\n')
+                    f'Letters Presented: {self.random_letters_list}\n'
+                    f'Click Record: {self.clicks}\n')
 
             try:
                 with open(self.file_path, "a") as file:
@@ -407,14 +372,13 @@ class MainWindow(QMainWindow):
             except IOError:
                 print("An error occurred while saving the file.")
 
-            self.reset()
-
             if self.n_back == 2:
-                self.n_back = 3
+                self.reset(3, self.TRIALS, self.MINIMUM_MATCHES, False)
                 self.info4()
                 self.infoTitle.setVisible(True)
-                self.resultButton.setVisible(False)
                 self.nextButton.setVisible(True)
+                self.info.setVisible(True)
+                self.info2.setVisible(True)
             elif self.n_back == 3:
                 self.finish_screen()
                 self.infoTitle.setVisible(True)
