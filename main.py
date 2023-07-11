@@ -389,17 +389,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--trials", help='sets '
                         'the amount of trials given '
-                        'in test (default 25)', type=int)
+                        'in test (default 25)', type=int, default=25)
     parser.add_argument("--matches", help='sets '
                         'the minimum amount of matches '
-                        'given in test (default 7)', type=int)
+                        'given in test (default 7)', type=int, default=7)
     parser.add_argument("--letterduration", help='sets '
                         'the amount of time that the '
                         'letter appears during the test '
-                        'in seconds (default 0.75)', type=float)
+                        'in seconds (default 0.75)', type=float, default=0.75)
     parser.add_argument("--pause", help='sets '
                         'the interval between each letter '
-                        'appearing (default 2)', type=float)
+                        'appearing (default 2)', type=float, default=2)
 
     args = parser.parse_args()
 
