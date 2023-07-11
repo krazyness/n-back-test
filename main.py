@@ -1,21 +1,17 @@
 #!/usr/bin/env python
 import random
 import sys
+import argparse
 from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 
-TRIALS = 25
-MINIMUM_MATCHES = 7
 COUNTDOWN = 3
-
-LETTER_APPEAR_DURATION_SECONDS = 0.75
-PAUSE_DURATION_SECONDS = 2
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, trials, matches, letterduration, pause):
         super().__init__()
         self.setWindowTitle("Memory Test")
         self.resize(700, 500)
@@ -24,6 +20,11 @@ class MainWindow(QMainWindow):
         self.is_letter_appeared = False
         self.is_practice = True
         self.n_back = 2
+
+        self.TRIALS = trials
+        self.MINIMUM_MATCHES = matches
+        self.LETTER_DURATION = letterduration
+        self.PAUSE_DURATION = pause
 
         self.debounce = False
 
@@ -85,7 +86,7 @@ class MainWindow(QMainWindow):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update)
-    
+
     def reset(self):
         self.trials_with_match_cnt = 0
         self.trials_with_no_match_cnt = 0
@@ -243,12 +244,12 @@ class MainWindow(QMainWindow):
         self.info.setText('Congratulations! You successfully completed '
                           'the 2-back\nand 3-back test! '
                           'You may now close the test window.')
-    
+
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.LeftButton:
             if self.is_letter_appeared and not self.is_clicked:
                 self.clicked_during_testing()
-    
+
     def clicked_during_testing(self):
         self.is_clicked = True
         if self.check():
@@ -276,21 +277,21 @@ class MainWindow(QMainWindow):
 
                 self.timer.start(1000)
 
-                self.get_random_letters(TRIALS, MINIMUM_MATCHES, self.n_back)
+                self.get_random_letters(self.TRIALS, self.MINIMUM_MATCHES, self.n_back)
             else:
                 self.clicked_during_testing()
 
     def update(self):
         if self.countdown_cnt >= COUNTDOWN:
             self.timer.stop()
-            if self.rounds_cnt < TRIALS:
+            if self.rounds_cnt < self.TRIALS:
                 if not self.is_letter_appeared:  # Make Letter Appear
                     self.is_letter_appeared = True
                     self.center_button.setVisible(True)
                     self.center_button.setEnabled(True)
                     self.debounce = False
 
-                    self.center_button.setText(f"{self.random_letters_list[self.rounds_cnt]}")  
+                    self.center_button.setText(f"{self.random_letters_list[self.rounds_cnt]}")
 
                     if self.is_practice:
                         if self.rounds_cnt > 0:
@@ -300,11 +301,11 @@ class MainWindow(QMainWindow):
                             self.practice_help2.setText(f"{self.random_letters_list[self.rounds_cnt-2]}")
                             self.practice_help2.setVisible(True)
 
-                    self.timer.start(LETTER_APPEAR_DURATION_SECONDS * 1000)
+                    self.timer.start(self.LETTER_DURATION * 1000)
                 else:  # Make Letter Not Appear And Check
                     self.is_letter_appeared = False
                     self.center_button.setVisible(False)
-                    
+
                     if not self.is_clicked:
                         if self.check():
                             self.missed_cnt += 1
@@ -316,7 +317,7 @@ class MainWindow(QMainWindow):
 
                     self.rounds_cnt += 1
 
-                    self.timer.start(PAUSE_DURATION_SECONDS * 1000)
+                    self.timer.start(self.PAUSE_DURATION * 1000)
             else:
                 self.is_letter_appeared = False
                 self.results()
@@ -340,15 +341,16 @@ class MainWindow(QMainWindow):
         self.random_letters_list = letters
 
     def check(self):
+        current = self.random_letters_list[self.rounds_cnt]
         if self.n_back == 3:
-            if self.random_letters_list[self.rounds_cnt] == self.random_letters_list[self.rounds_cnt - 3]:
+            if current == self.random_letters_list[self.rounds_cnt - 3]:
                 self.trials_with_match_cnt += 1
                 return True
             else:
                 self.trials_with_no_match_cnt += 1
                 return False
         elif self.n_back == 2:
-            if self.random_letters_list[self.rounds_cnt] == self.random_letters_list[self.rounds_cnt - 2]:
+            if current == self.random_letters_list[self.rounds_cnt - 2]:
                 self.trials_with_match_cnt += 1
                 return True
             else:
@@ -362,7 +364,7 @@ class MainWindow(QMainWindow):
         self.debounce = False
 
         if self.is_practice:
-            self.info.setText(f'There were {TRIALS} '
+            self.info.setText(f'There were {self.TRIALS} '
                               'trials total in this block.'
                               '\n\nTotal trials that had a '
                               f'match: {self.trials_with_match_cnt}'
@@ -390,7 +392,7 @@ class MainWindow(QMainWindow):
             self.is_practice = False
         else:
             data = (f'Round Type: {self.n_back}-Back Test\n'
-                    f'Number of Trials: {TRIALS}\n'
+                    f'Number of Trials: {self.TRIALS}\n'
                     f'Trials With A Match: {self.trials_with_match_cnt}\n'
                     f'Trials With No Match: {self.trials_with_no_match_cnt}\n'
                     f'Number Of Correctly Matched Items: {self.correct_cnt}\n'
@@ -404,7 +406,7 @@ class MainWindow(QMainWindow):
                 print("File saved")
             except IOError:
                 print("An error occurred while saving the file.")
-            
+
             self.reset()
 
             if self.n_back == 2:
@@ -420,8 +422,30 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--trials", help='sets '
+                        'the amount of trials given '
+                        'in test (default 25)', type=int)
+    parser.add_argument("--matches", help='sets '
+                        'the minimum amount of matches '
+                        'given in test (default 7)', type=int)
+    parser.add_argument("--letterduration", help='sets '
+                        'the amount of time that the '
+                        'letter appears during the test '
+                        'in seconds (default 0.75)', type=float)
+    parser.add_argument("--pause", help='sets '
+                        'the interval between each letter '
+                        'appearing (default 2)', type=float)
+
+    args = parser.parse_args()
+
     app = QApplication([])
-    window = MainWindow()
+    window = MainWindow(
+         args.trials,
+         args.matches,
+         args.letterduration,
+         args.pause
+    )
     window.installEventFilter(window)
     window.show()
     app.exec()
