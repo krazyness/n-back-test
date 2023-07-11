@@ -85,6 +85,15 @@ class MainWindow(QMainWindow):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update)
+    
+    def reset(self):
+        self.trials_with_match_cnt = 0
+        self.trials_with_no_match_cnt = 0
+        self.correct_cnt = 0
+        self.missed_cnt = 0
+        self.incorrect_cnt = 0
+        self.countdown_cnt = 0
+        self.rounds_cnt = 0
 
     def get_directory(self):
         file_dialog = QFileDialog(self)
@@ -366,13 +375,7 @@ class MainWindow(QMainWindow):
                               f'{self.incorrect_cnt}')
             self.info.setVisible(True)
 
-            self.trials_with_match_cnt = 0
-            self.trials_with_no_match_cnt = 0
-            self.correct_cnt = 0
-            self.missed_cnt = 0
-            self.incorrect_cnt = 0
-            self.countdown_cnt = 0
-            self.rounds_cnt = 0
+            self.reset()
 
             self.resultButton = QPushButton("Click here to continue", self)
             self.resultButton.setStyleSheet('background-color: '
@@ -402,13 +405,7 @@ class MainWindow(QMainWindow):
             except IOError:
                 print("An error occurred while saving the file.")
             
-            self.trials_with_match_cnt = 0
-            self.trials_with_no_match_cnt = 0
-            self.correct_cnt = 0
-            self.missed_cnt = 0
-            self.incorrect_cnt = 0
-            self.countdown_cnt = 0
-            self.rounds_cnt = 0
+            self.reset()
 
             if self.n_back == 2:
                 self.n_back = 3
