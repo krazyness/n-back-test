@@ -18,11 +18,11 @@ class MainWindow(QMainWindow):
         font.setBold(bold)
         return font
 
-    def __init__(self, trials, matches, letterduration, pause):
+    def __init__(self, trials, matches, letter_duration, pause):
         super().__init__()
         self.TRIALS = trials
         self.MINIMUM_MATCHES = matches
-        self.LETTER_DURATION = letterduration
+        self.LETTER_DURATION = letter_duration
         self.PAUSE_DURATION = pause
         self.reset(2, trials, matches, True)
 
@@ -249,38 +249,35 @@ class MainWindow(QMainWindow):
             self.countdown_cnt += 1
             return
         self.timer.stop()
-        if self.rounds_cnt < self.TRIALS:
-            if not self.is_letter_appeared:  # Make Letter Appear
-                self.is_letter_appeared = True
-                self.center_button.setVisible(True)
-                self.center_button.setEnabled(True)
-                self.center_button.setText(
-                    f"{self.random_letters_list[self.rounds_cnt]}")
-
-                if self.is_practice:
-                    if self.rounds_cnt > 0:
-                        self.practice_help1.setText(
-                            f"{self.random_letters_list[self.rounds_cnt-1]}")
-                        self.practice_help1.setVisible(True)
-                    if self.rounds_cnt > 1:
-                        self.practice_help2.setText(
-                            f"{self.random_letters_list[self.rounds_cnt-2]}")
-                        self.practice_help2.setVisible(True)
-
-                self.timer.start(self.LETTER_DURATION * 1000)
-            else:  # Make Letter Not Appear And Check
-                self.is_letter_appeared = False
-                self.center_button.setVisible(False)
-                self.check(False)
-                self.practice_help1.setVisible(False)
-                self.practice_help2.setVisible(False)
-
-                self.rounds_cnt += 1
-
-                self.timer.start(self.PAUSE_DURATION * 1000)
-        else:
+        if self.rounds_cnt >= self.TRIALS:
             self.is_letter_appeared = False
             self.results()
+            return
+        if not self.is_letter_appeared:  # Make Letter Appear
+            self.is_letter_appeared = True
+            self.center_button.setVisible(True)
+            self.center_button.setEnabled(True)
+            self.center_button.setText(
+                f"{self.random_letters_list[self.rounds_cnt]}")
+            if self.is_practice:
+                if self.rounds_cnt > 0:
+                    self.practice_help1.setText(
+                        f"{self.random_letters_list[self.rounds_cnt-1]}")
+                    self.practice_help1.setVisible(True)
+                if self.rounds_cnt > 1:
+                    self.practice_help2.setText(
+                        f"{self.random_letters_list[self.rounds_cnt-2]}")
+                    self.practice_help2.setVisible(True)
+            self.timer.start(self.LETTER_DURATION * 1000)
+        else:  # Make Letter Not Appear And Check
+            self.is_letter_appeared = False
+            self.center_button.setVisible(False)
+            self.check(False)
+            self.practice_help1.setVisible(False)
+            self.practice_help2.setVisible(False)
+
+            self.rounds_cnt += 1
+            self.timer.start(self.PAUSE_DURATION * 1000)
 
     def check(self, clicked):
         if len(self.clicks) > self.rounds_cnt:
@@ -362,26 +359,32 @@ if __name__ == "__main__":
     parser.add_argument(
         "--trials", help='sets '
         'the amount of trials given '
-        'in test (default 25)', type=int)
+        'in test (default 25)', type=int, default=25)
     parser.add_argument(
         "--matches", help='sets '
         'the minimum amount of matches '
-        'given in test (default 7)', type=int)
+        'given in test (default 7)', type=int, default=7)
     parser.add_argument(
-        "--letterduration", help='sets '
+        "--letter-duration", help='sets '
         'the amount of time that the '
         'letter appears during the test '
-        'in seconds (default 0.75)', type=float)
+        'in seconds (default 0.75)', type=float, default=0.75)
     parser.add_argument(
         "--pause", help='sets '
         'the interval between each letter '
-        'appearing (default 2)', type=float)
+        'appearing (default 2)', type=float, default=2)
     args = parser.parse_args()
+    if args.trials <= args.matches+2:
+        print(
+            'ERR-01: cannot make trials less or equal to matches+2\n'
+            f'Current #trials: {args.trials}\n'
+            f'Current #matches: {args.matches}')
+        sys.exit(1)
     app = QApplication([])
     window = MainWindow(
         args.trials,
         args.matches,
-        args.letterduration,
+        args.letter_duration,
         args.pause)
     window.installEventFilter(window)
     window.show()
