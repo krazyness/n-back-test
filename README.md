@@ -145,6 +145,7 @@ program can place test results there.
 3. Run the shortcut named `Click me to run`, and it should run the full N-Back test.
 4. (Optional) Adjust settings for the N-Back Test by right-clicking on `Click me to run`, and going into its properties. You can adjust the
 settings of the N-Back Test under "Target".
+
 ![4dc27c87-3c94-41d8-991b-2b9adaa3c50e](https://github.com/krazyness/n-back-test/assets/138156236/f0b3989d-f91e-4422-91e7-514ff4819582)
 
 The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letterduration 0.75 --pause 2"
