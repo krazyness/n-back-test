@@ -7,13 +7,6 @@
 
 
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/krazyness/n-back-test">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
 <h3 align="center">N-Back Test</h3>
 
   <p align="center">
@@ -94,24 +87,24 @@ To get a local copy running, here's how you can install it!
 
 _Here's a list of things you need for the program._
 
-If you're going to install the repo:
+**If you're going to install the repo:**
 * Python Library
 * PySide6
 
-If you're going to install the EXE:
+**If you're going to install the EXE:**
 * Windows
 
 ### Installation
 
 _Here's how you're going to install the program._
 
-If you're installing the repo:
+**If you're installing the repo:**
 1. Clone the repo
    ```sh
    git clone https://github.com/krazyness/n-back-test.git
    ```
 
-If you're installing the EXE:
+**If you're installing the EXE:**
 1. Download the latest release from https://github.com/krazyness/n-back-test/releases
 2. Extract 'n-back.zip' into the C: Drive
 
@@ -123,7 +116,7 @@ If you're installing the EXE:
 
 _Here's how you can use the program._
 
-If you installed with the repo:
+**If you installed with the repo:**
 1. Pick/create a directory to place the test results in. During the N-Back test, it's going to require you to make a .txt file so that the
 program can place test results there.
 2. Run the N-Back test
@@ -142,13 +135,15 @@ The number after "--letterduration" correlates to the amount of time (in seconds
 
 The number after "--pause" correlates to the interval (in seconds) between each letter appearing.
 
+**You may adjust those numbers to your liking.**
 
-If you installed the EXE:
+
+**If you installed the EXE:**
 1. Pick/create a directory to place the test results in. During the N-Back test, it's going to require you to make a .txt file so that the
 program can place test results there.
-2. Go to the unzipped folder named 'n-back' under the C: Drive.
-3. Run the shortcut named 'Click me to run', and it should run the full N-Back test.
-4. (Optional) Adjust settings for the N-Back Test by right-clicking on 'Click me to run', and going into its properties. You can adjust the
+2. Go to the unzipped folder named `n-back` under the C: Drive.
+3. Run the shortcut named `Click me to run`, and it should run the full N-Back test.
+4. (Optional) Adjust settings for the N-Back Test by right-clicking on `Click me to run`, and going into its properties. You can adjust the
 settings of the N-Back Test under "Target".
 ![4dc27c87-3c94-41d8-991b-2b9adaa3c50e](https://github.com/krazyness/n-back-test/assets/138156236/f0b3989d-f91e-4422-91e7-514ff4819582)
 
@@ -219,13 +214,13 @@ Project Link: [https://github.com/krazyness/n-back-test](https://github.com/kraz
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/krazyness/n-back-2.svg?style=for-the-badge
-[contributors-url]: https://github.com/krazyness/n-back-2/graphs/contributors
-[issues-shield]: https://img.shields.io/github/issues/krazyness/n-back-2.svg?style=for-the-badge
-[issues-url]: https://github.com/krazyness/n-back-2/issues
-[license-shield]: https://img.shields.io/github/license/krazyness/n-back-2.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/krazyness/n-back-test.svg?style=for-the-badge
+[contributors-url]: https://github.com/krazyness/n-back-test/graphs/contributors
+[issues-shield]: https://img.shields.io/github/issues/krazyness/n-back-test.svg?style=for-the-badge
+[issues-url]: https://github.com/krazyness/n-back-test/issues
+[license-shield]: https://img.shields.io/github/license/krazyness/n-back-test.svg?style=for-the-badge
 [license-url]: https://github.com/krazyness/n-back-test/blob/master/n-back.py
 [Python.com]: https://img.shields.io/badge/Python-yellow?style=for-the-badge&logo=python&color=ffde50
 [Python-url]: https://www.python.org/
-[PySide6.com]: https://img.shields.io/badge/PySide6-white?style=for-the-badge&logo=qt&color=FFFFFF
+[PySide6.com]: https://img.shields.io/badge/PySide6-green?style=for-the-badge&logo=qt&color=89e093
 [PySide6-url]: https://pypi.org/project/PySide6/
