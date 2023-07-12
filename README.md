@@ -1,9 +1,9 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 
-[![Contributors][contributors-shield]][contributors-url]
+<!--[![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![MIT License][license-shield]][license-url]--!>
 
 
 
@@ -214,12 +214,12 @@ Project Link: [https://github.com/krazyness/n-back-test](https://github.com/kraz
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/krazyness/n-back-test.svg?style=for-the-badge
+<!--[contributors-shield]: https://img.shields.io/github/contributors/krazyness/n-back-test.svg?style=for-the-badge
 [contributors-url]: https://github.com/krazyness/n-back-test/graphs/contributors
 [issues-shield]: https://img.shields.io/github/issues/krazyness/n-back-test.svg?style=for-the-badge
 [issues-url]: https://github.com/krazyness/n-back-test/issues
 [license-shield]: https://img.shields.io/github/license/krazyness/n-back-test.svg?style=for-the-badge
-[license-url]: https://github.com/krazyness/n-back-test/blob/master/n-back.py
+[license-url]: https://github.com/krazyness/n-back-test/blob/master/n-back.py-->
 [Python.com]: https://img.shields.io/badge/Python-yellow?style=for-the-badge&logo=python&color=ffde50
 [Python-url]: https://www.python.org/
 [PySide6.com]: https://img.shields.io/badge/PySide6-green?style=for-the-badge&logo=qt&color=89e093
