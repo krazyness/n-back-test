@@ -1,4 +1,27 @@
 #!/usr/bin/env python
+"""
+MIT License
+
+Copyright (c) 2023 Brody Dai
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 import random
 import sys
 import os
@@ -135,19 +158,19 @@ class MainWindow(QMainWindow):
             'the window with the mouse.\n\n'
             'If correct, you will hear this sound:\n\n'
             'If incorrect, you will hear this sound:', self)
-        self.info2.setGeometry(100, 40, 500, 500)
+        self.info2.setGeometry(100, 50, 500, 500)
         self.info2.setFont(self.my_font(15, False))
         self.info2.setVisible(True)
 
         self.play_correct_button = QPushButton('PLAY', self)
-        self.play_correct_button.setGeometry(425, 275, 250, 45)
+        self.play_correct_button.setGeometry(425, 295, 250, 45)
         self.play_correct_button.setStyleSheet(
             'background-color: rgb(0, 255, 0);')
         self.play_correct_button.setVisible(True)
         self.play_correct_button.clicked.connect(self.correct_sound.play)
 
         self.play_incorrect_button = QPushButton('PLAY', self)
-        self.play_incorrect_button.setGeometry(425, 330, 250, 45)
+        self.play_incorrect_button.setGeometry(425, 350, 250, 45)
         self.play_incorrect_button.setStyleSheet(
             'background-color: rgb(0, 255, 0);')
         self.play_incorrect_button.setVisible(True)
@@ -155,7 +178,7 @@ class MainWindow(QMainWindow):
 
         self.nextButton = QPushButton(
             'Click here for the next info screen', self)
-        self.nextButton.setGeometry(100, 390, 250, 50)
+        self.nextButton.setGeometry(100, 400, 250, 50)
         self.nextButton.setStyleSheet("background-color: rgb(0, 255, 0);")
         self.nextButton.setFont(self.my_font(10, False))
         self.nextButton.setVisible(True)
@@ -205,7 +228,7 @@ class MainWindow(QMainWindow):
         self.nextButton.setGeometry(100, 310, 225, 50)
 
     def info4(self):
-        self.info.setGeometry(100, -75, 500, 500)
+        self.info.setGeometry(100, -55, 500, 500)
         self.info.setText(
             'Congratulations on completing the 2-back test! Now,\n'
             'it\'s time to challenge yourself further with the 3-back test.\n'
@@ -214,12 +237,12 @@ class MainWindow(QMainWindow):
             'to determine if the current letter matches the one\n'
             'presented 3 trials ago.')
 
-        self.info2.setGeometry(100, 20, 500, 500)
+        self.info2.setGeometry(100, 50, 500, 500)
         self.info2.setText(
             'Concentrate, and try your best because this is not easy.')
 
         self.nextButton.setText("Click here to begin the 3-back test")
-        self.nextButton.setGeometry(100, 310, 225, 50)
+        self.nextButton.setGeometry(100, 340, 225, 50)
 
     def finish_screen(self):
         self.infoTitle.setText("You Finished!")

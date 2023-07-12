@@ -1,29 +1,9 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -83,8 +63,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 There are some good N-Back Tests available online; however, none of them fitted my needs, so I created this N-Back Test that can run as a
 stand-alone program that doesn't require network to keep collected data secure.
 
@@ -114,43 +92,77 @@ To get a local copy running, here's how you can install it!
 
 ### Prerequisites
 
-Here's a list of things you need for the program.
+_Here's a list of things you need for the program._
+
+If you're going to install the repo:
 * Python Library
 * PySide6
 
+If you're going to install the EXE:
+* Windows
+
 ### Installation
 
+_Here's how you're going to install the program._
+
+If you're installing the repo:
 1. Clone the repo
    ```sh
    git clone https://github.com/krazyness/n-back-test.git
    ```
-You're done!
+
+If you're installing the EXE:
+1. Download the latest release from https://github.com/krazyness/n-back-test/releases
+2. Extract 'n-back.zip' into the C: Drive
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-2. Run n-back.py
-   ```sh
-   python /where_you_cloned_the_repo_to/n-back.py
-   ```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+_Here's how you can use the program._
+
+If you installed with the repo:
+1. Pick/create a directory to place the test results in. During the N-Back test, it's going to require you to make a .txt file so that the
+program can place test results there.
+2. Run the N-Back test
+   ```sh
+   python /where_you_cloned_the_repo_to/n-back.py
+   ```
+3. (Optional) Adjust settings for the N-Back Test
+   ```sh
+   python /where_you_cloned_the_repo_to/n-back.py --trials 25 --matches 7 --letter-duration 0.75 --pause 2
+   ``` 
+The number after "--trials" correlates to the number of trials in the n-back tests.
+
+The number after "--matches" correlates to the minimum number of n-back matches in each test.
+
+The number after "--letterduration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
+
+The number after "--pause" correlates to the interval (in seconds) between each letter appearing.
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+If you installed the EXE:
+1. Pick/create a directory to place the test results in. During the N-Back test, it's going to require you to make a .txt file so that the
+program can place test results there.
+2. Go to the unzipped folder named 'n-back' under the C: Drive.
+3. Run the shortcut named 'Click me to run', and it should run the full N-Back test.
+4. (Optional) Adjust settings for the N-Back Test by right-clicking on 'Click me to run', and going into its properties. You can adjust the
+settings of the N-Back Test under "Target".
+![4dc27c87-3c94-41d8-991b-2b9adaa3c50e](https://github.com/krazyness/n-back-test/assets/138156236/f0b3989d-f91e-4422-91e7-514ff4819582)
 
+The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letterduration 0.75 --pause 2"
 
+The number after "--trials" correlates to the number of trials in the n-back tests.
 
-<!-- ROADMAP -->
-## Roadmap
+The number after "--matches" correlates to the minimum number of n-back matches in each test.
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+The number after "--letterduration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+The number after "--pause" correlates to the interval (in seconds) between each letter appearing.
+
+**You may adjust those numbers to your liking.**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -177,7 +189,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `n-back.py` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -186,9 +198,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Brody Dai - brodyxdai@gmail.com - Discord: dudethatskrazy
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/krazyness/n-back-test](https://github.com/krazyness/n-back-test)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -197,9 +209,9 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [Best README Template](https://github.com/othneildrew/Best-README-Template)
+* [Image Shields](https://shields.io/)
+* [Choose an Open Source License](https://choosealicense.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -207,37 +219,13 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
-[Python.com]: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png
+[contributors-shield]: https://img.shields.io/github/contributors/krazyness/n-back-2.svg?style=for-the-badge
+[contributors-url]: https://github.com/krazyness/n-back-2/graphs/contributors
+[issues-shield]: https://img.shields.io/github/issues/krazyness/n-back-2.svg?style=for-the-badge
+[issues-url]: https://github.com/krazyness/n-back-2/issues
+[license-shield]: https://img.shields.io/github/license/krazyness/n-back-2.svg?style=for-the-badge
+[license-url]: https://github.com/krazyness/n-back-test/blob/master/n-back.py
+[Python.com]: https://img.shields.io/badge/Python-yellow?style=for-the-badge&logo=python&color=ffde50
 [Python-url]: https://www.python.org/
-[PySide6.com]: https://pypi.org/static/images/logo-small.2a411bc6.svg
+[PySide6.com]: https://img.shields.io/badge/PySide6-white?style=for-the-badge&logo=qt&color=FFFFFF
 [PySide6-url]: https://pypi.org/project/PySide6/
-1. Pick/create a directory to place the test results in. (When students do the test, they're prompted to make a text file under a directory, where the n-back test will edit to show test results. You may instruct them to put the text file under your chosen directory.)
-2. Unzip n-back.zip into the C: Drive.
-3. After unzipping, go into the unzipped folder under the C: Drive. The folder should be named "n-back".
-4. Run the shortcut named "Click me to run", and it should run the full n-back test.
-5. To adjust the settings of the test, right-click on "Click me to run", and go into its properties. You can adjust the settings of the n-back test under "Target".
-
-![4dc27c87-3c94-41d8-991b-2b9adaa3c50e](https://github.com/krazyness/n-back-test/assets/138156236/f0b3989d-f91e-4422-91e7-514ff4819582)
-
-The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letterduration 0.75 --pause 2"
-
-The number after "--trials" correlates to the number of trials in the n-back tests.
-
-The number after "--matches" correlates to the minimum number of n-back matches in each test.
-
-The number after "--letterduration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
-
-The number after "--pause" correlates to the interval (in seconds) between each letter appearing.
