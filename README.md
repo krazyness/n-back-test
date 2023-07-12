@@ -131,7 +131,7 @@ The number after "--trials" correlates to the number of trials in the n-back tes
 
 The number after "--matches" correlates to the minimum number of n-back matches in each test.
 
-The number after "--letterduration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
+The number after "--letter-duration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
 
 The number after "--pause" correlates to the interval (in seconds) between each letter appearing.
 
@@ -148,13 +148,13 @@ settings of the N-Back Test under "Target".
 
 ![4dc27c87-3c94-41d8-991b-2b9adaa3c50e](https://github.com/krazyness/n-back-test/assets/138156236/f0b3989d-f91e-4422-91e7-514ff4819582)
 
-The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letterduration 0.75 --pause 2"
+The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letter-duration 0.75 --pause 2"
 
 The number after "--trials" correlates to the number of trials in the n-back tests.
 
 The number after "--matches" correlates to the minimum number of n-back matches in each test.
 
-The number after "--letterduration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
+The number after "--letter-duration" correlates to the amount of time (in seconds) the letter will appear during the n-back test.
 
 The number after "--pause" correlates to the interval (in seconds) between each letter appearing.
 
