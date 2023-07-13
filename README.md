@@ -3,7 +3,7 @@
 
 <!--[![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]--!>
+[![MIT License][license-shield]][license-url]-->
 
 
 
@@ -15,8 +15,6 @@
     <a href="https://github.com/krazyness/n-back-test"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/krazyness/n-back-test">View Demo</a>
-    ·
     <a href="https://github.com/krazyness/n-back-test/issues">Report Bug</a>
     ·
     <a href="https://github.com/krazyness/n-back-test/issues">Request Feature</a>
@@ -43,7 +41,6 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
