@@ -7,10 +7,10 @@
 
 
 
-<h3 align="center">N-Back Test</h3>
+<h3 align="center">Visual Single N-Back Test</h3>
 
   <p align="center">
-    A program including a 2-Back and 3-Back Test.
+    A program including a visual 2-Back and 3-Back Test.
     <br />
     <a href="https://github.com/krazyness/n-back-test"><strong>Explore the docs »</strong></a>
     <br />
@@ -53,7 +53,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-There are some good N-Back Tests available online; however, none of them fitted my needs, so I created this N-Back Test that can run as a
+There are some good N-Back Tests available online; however, none of them fitted my needs, so I created this visual single N-Back Test that can run as a
 stand-alone program that doesn't require network to keep collected data secure.
 
 Here's why you should use my N-Back program:
