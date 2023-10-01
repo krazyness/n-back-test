@@ -205,6 +205,7 @@ Project Link: [https://github.com/krazyness/n-back-test](https://github.com/kraz
 * [Best README Template](https://github.com/othneildrew/Best-README-Template)
 * [Image Shields](https://shields.io/)
 * [Choose an Open Source License](https://choosealicense.com/)
+* Cortney Turner, Associate Research Scientist, Michigan Neuroscience Institute and Associate Research Scientist, Pharmacology, Medical School
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
