@@ -2,7 +2,7 @@
 """
 MIT License
 
-Copyright (c) 2023 Brody Dai
+Copyright (c) 2023-2024 Brody Dai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -51,6 +51,9 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Memory Test")
         self.resize(700, 500)
+        palette = QPalette()
+        palette.setColor(QPalette.Window, QColor(0, 0, 0))
+        self.setPalette(palette)
         self.correct_sound_output = QAudioOutput()
         self.correct_sound_output.setVolume(50)
         self.incorrect_sound_output = QAudioOutput()
@@ -68,7 +71,7 @@ class MainWindow(QMainWindow):
             'Choose a file to\nsave your results in', self)
         self.directory_button.setGeometry(250, 150, 200, 200)
         self.directory_button.setStyleSheet(
-            'background-color: rgb(0, 255, 0);')
+            'background-color: rgb(255, 255, 255);')
         self.directory_button.setFont(self.my_font(15, False))
         self.directory_button.setVisible(True)
         self.directory_button.clicked.connect(self.get_directory)
@@ -89,6 +92,52 @@ class MainWindow(QMainWindow):
         self.practice_help2.setFont(self.my_font(15, False))
         self.practice_help2.setVisible(False)
         self.practice_help2.setEnabled(False)
+
+        self.infoTitle = QLabel("N-back working memory task", self)
+        self.infoTitle.setGeometry(100, 50, 500, 50)
+        self.infoTitle.setFont(self.my_font(20, True))
+        self.infoTitle.setStyleSheet('color: white;')
+        self.infoTitle.setVisible(False)
+        self.info = QLabel(
+            'In this task, you will see a sequence of letters.\n'
+            'Each letter is shown for a few seconds. You need\n'
+            'to decide if you saw the same letter 2 trials ago,\n'
+            'that is, this is a n=2-back task.', self)
+        self.info.setGeometry(100, -90, 500, 500)
+        self.info.setFont(self.my_font(15, False))
+        self.info.setStyleSheet('color: white;')
+        self.info.setVisible(False)
+        self.info2 = QLabel(
+            'If you saw the same letter 2 trials ago, you click\n'
+            'the window with the mouse.\n\n'
+            'If correct, you will hear this sound:\n\n'
+            'If incorrect, you will hear this sound:', self)
+        self.info2.setGeometry(100, 50, 500, 500)
+        self.info2.setFont(self.my_font(15, False))
+        self.info2.setStyleSheet('color: white;')
+        self.info2.setVisible(False)
+        self.play_correct_button = QPushButton('PLAY', self)
+        self.play_correct_button.setGeometry(425, 295, 250, 45)
+        self.play_correct_button.setStyleSheet(
+            'background-color: rgb(0, 255, 0);')
+        self.play_correct_button.setVisible(False)
+        self.play_incorrect_button = QPushButton('PLAY', self)
+        self.play_incorrect_button.setGeometry(425, 350, 250, 45)
+        self.play_incorrect_button.setStyleSheet(
+            'background-color: rgb(0, 255, 0);')
+        self.play_incorrect_button.setVisible(False)
+        self.nextButton = QPushButton(
+            'Click here for the next info screen', self)
+        self.nextButton.setGeometry(100, 400, 250, 50)
+        self.nextButton.setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.nextButton.setFont(self.my_font(10, False))
+        self.nextButton.setVisible(False)
+        self.resultButton = QPushButton("Click here to continue", self)
+        self.resultButton.setStyleSheet(
+            'background-color: rgb(0, 255, 0);')
+        self.resultButton.setGeometry(100, 325, 200, 50)
+        self.resultButton.setFont(self.my_font(10, False))
+        self.resultButton.setVisible(False)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update)
@@ -139,50 +188,14 @@ class MainWindow(QMainWindow):
             sys.exit(1)
 
     def info_click(self):
-        self.infoTitle = QLabel("N-back working memory task", self)
-        self.infoTitle.setGeometry(100, 50, 500, 50)
-        self.infoTitle.setFont(self.my_font(20, True))
         self.infoTitle.setVisible(True)
-
-        self.info = QLabel(
-            'In this task, you will see a sequence of letters.\n'
-            'Each letter is shown for a few seconds. You need\n'
-            'to decide if you saw the same letter 2 trials ago,\n'
-            'that is, this is a n=2-back task.', self)
-        self.info.setGeometry(100, -90, 500, 500)
-        self.info.setFont(self.my_font(15, False))
         self.info.setVisible(True)
-
-        self.info2 = QLabel(
-            'If you saw the same letter 2 trials ago, you click\n'
-            'the window with the mouse.\n\n'
-            'If correct, you will hear this sound:\n\n'
-            'If incorrect, you will hear this sound:', self)
-        self.info2.setGeometry(100, 50, 500, 500)
-        self.info2.setFont(self.my_font(15, False))
         self.info2.setVisible(True)
-
-        self.play_correct_button = QPushButton('PLAY', self)
-        self.play_correct_button.setGeometry(425, 295, 250, 45)
-        self.play_correct_button.setStyleSheet(
-            'background-color: rgb(0, 255, 0);')
         self.play_correct_button.setVisible(True)
         self.play_correct_button.clicked.connect(self.correct_sound.play)
-
-        self.play_incorrect_button = QPushButton('PLAY', self)
-        self.play_incorrect_button.setGeometry(425, 350, 250, 45)
-        self.play_incorrect_button.setStyleSheet(
-            'background-color: rgb(0, 255, 0);')
         self.play_incorrect_button.setVisible(True)
         self.play_incorrect_button.clicked.connect(self.incorrect_sound.play)
-
-        self.nextButton = QPushButton(
-            'Click here for the next info screen', self)
-        self.nextButton.setGeometry(100, 400, 250, 50)
-        self.nextButton.setStyleSheet("background-color: rgb(0, 255, 0);")
-        self.nextButton.setFont(self.my_font(10, False))
         self.nextButton.setVisible(True)
-
         self.nextButton.clicked.connect(self.info2_click)
 
     def info2_click(self):
@@ -196,14 +209,14 @@ class MainWindow(QMainWindow):
             'of the screen. They are only there to help. Later on, they\n'
             'will not be shown anymore, and you will need to do it all\n'
             'based on your memory.')
-        self.info.setGeometry(100, -75, 500, 500)
+        self.info.move(self.info.x(), self.info.y() + 15)
 
         self.info2.setText(
             'Tip: You can click outside of the box\n'
             'so your cursor doesn\'t block '
             'the displayed letter')
 
-        self.nextButton.setGeometry(100, 350, 250, 50)
+        self.nextButton.move(self.nextButton.x(), self.nextButton.y() - 50)
         self.nextButton.setText("Click here to begin your practice run!")
         self.nextButton.clicked.connect(self.on_next_button)
 
@@ -212,23 +225,24 @@ class MainWindow(QMainWindow):
         self.resultButton.setVisible(False)
         self.nextButton.setVisible(True)
 
-        self.info.setGeometry(100, -95, 500, 500)
+        self.info.move(self.info.x(), self.info.y() - 35)
         self.info.setText(
             'Now that you have learned the n-back task, you need to\n'
             'do it purely based on your memory. Thus, click the letter\n'
             'if it is the same as 2 letters ago.')
 
         self.info2.setVisible(True)
-        self.info2.setGeometry(100, -10, 500, 500)
+        self.info2.move(self.info2.x(), self.info2.y() - 60)
         self.info2.setText(
             'Otherwise, do nothing.\n\n'
             'Concentrate, because this is not easy.')
 
         self.nextButton.setText("Click here to begin the 2-back test")
-        self.nextButton.setGeometry(100, 310, 225, 50)
+        self.nextButton.setGeometry(
+            self.nextButton.x(), self.nextButton.y() + 10, 225, 50)
 
     def info4(self):
-        self.info.setGeometry(100, -55, 500, 500)
+        self.info.move(self.info.x(), self.info.y() + 25)
         self.info.setText(
             'Congratulations on completing the 2-back test! Now,\n'
             'it\'s time to challenge yourself further with the 3-back test.\n'
@@ -237,12 +251,12 @@ class MainWindow(QMainWindow):
             'to determine if the current letter matches the one\n'
             'presented 3 trials ago.')
 
-        self.info2.setGeometry(100, 50, 500, 500)
+        self.info2.move(self.info2.x(), self.info2.y() + 60)
         self.info2.setText(
             'Concentrate, and try your best because this is not easy.')
 
         self.nextButton.setText("Click here to begin the 3-back test")
-        self.nextButton.setGeometry(100, 340, 225, 50)
+        self.nextButton.move(self.nextButton.x(), self.nextButton.y() + 80)
 
     def finish_screen(self):
         self.infoTitle.setText("You Finished!")
@@ -250,10 +264,22 @@ class MainWindow(QMainWindow):
             'Congratulations! You successfully completed the 2-back\n'
             'and 3-back test! You may now close the test window.')
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:
+    def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
             if self.is_letter_appeared:
                 self.check(True)
+
+    def resizeEvent(self, event: QResizeEvent):
+        for widget in self.findChildren(QWidget):
+            if event.oldSize().width() <= 0:
+                return
+            old_centerx = event.oldSize().width() // 2 - widget.width() // 2
+            old_centery = event.oldSize().height() // 2 - widget.height() // 2
+            new_centerx = self.width() // 2 - widget.width() // 2
+            new_centery = self.height() // 2 - widget.height() // 2
+            distance_x = new_centerx - old_centerx
+            distance_y = new_centery - old_centery
+            widget.move(widget.x() + distance_x, widget.y() + distance_y)
 
     def on_next_button(self):
         self.center_button.setEnabled(False)
@@ -340,11 +366,6 @@ class MainWindow(QMainWindow):
 
             self.reset(2, self.TRIALS, self.MINIMUM_MATCHES, False)
 
-            self.resultButton = QPushButton("Click here to continue", self)
-            self.resultButton.setStyleSheet(
-                'background-color: rgb(0, 255, 0);')
-            self.resultButton.setGeometry(100, 325, 200, 50)
-            self.resultButton.setFont(self.my_font(10, False))
             self.resultButton.setVisible(True)
             self.resultButton.clicked.connect(self.info3_click)
         else:
@@ -391,11 +412,11 @@ if __name__ == "__main__":
         "--letter-duration", help='sets '
         'the amount of time that the '
         'letter appears during the test '
-        'in seconds (default 0.75)', type=float, default=0.75)
+        'in seconds (default 0.5)', type=float, default=0.5)
     parser.add_argument(
         "--pause", help='sets '
         'the interval between each letter '
-        'appearing (default 2)', type=float, default=2)
+        'appearing (default 2.5)', type=float, default=2.5)
     args = parser.parse_args()
     if args.trials <= args.matches+2:
         print(
