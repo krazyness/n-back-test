@@ -164,8 +164,11 @@ class MainWindow(QMainWindow):
             else:
                 new = random.choice(a2z)
             letters.append(new)
-            if new == letters[i]:
+            if new == letters[i] and i in locations:
                 self.trials_with_match_cnt += 1
+            elif new == letters[i] and i not in locations:
+                available_letters = set(a2z) - {new}
+                letters[i] = random.choice(list(available_letters))
         self.random_letters_list = letters
 
     def get_directory(self):
