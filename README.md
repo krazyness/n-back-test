@@ -145,7 +145,7 @@ settings of the N-Back Test under "Target".
 
 ![Properties Image](github-properties-image.png)
 
-The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letter-duration 0.75 --pause 2"
+The text under "Target" should say "C:\n-back\n-back.exe --trials 25 --matches 7 --letter-duration 0.5 --pause 2.5"
 
 The number after "--trials" correlates to the number of trials in the n-back tests.
 
