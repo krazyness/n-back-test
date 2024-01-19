@@ -322,14 +322,18 @@ class MainWindow(QMainWindow):
                     self.practice_help2.setVisible(True)
             self.timer.start(self.LETTER_DURATION * 1000)
         else:  # Make Letter Not Appear And Check
-            self.is_letter_appeared = False
+            def updateTimerFunction():
+                updateTimer.stop()
+                self.is_letter_appeared = False
+                self.check(False)
+                self.rounds_cnt += 1
+                self.timer.start((self.PAUSE_DURATION * 1000) * 2/7)
+            updateTimer = QTimer()
+            updateTimer.timeout.connect(updateTimerFunction)
             self.center_button.setVisible(False)
-            self.check(False)
             self.practice_help1.setVisible(False)
             self.practice_help2.setVisible(False)
-
-            self.rounds_cnt += 1
-            self.timer.start(self.PAUSE_DURATION * 1000)
+            updateTimer.start((self.PAUSE_DURATION * 1000) * 5/7)
 
     def check(self, clicked):
         if len(self.clicks) > self.rounds_cnt:
